@@ -5,6 +5,7 @@
 
 #include "KeyboardScene.h"
 #include "AppMacros.h"
+#include "cocostudio/CocoStudio.h"
 
 USING_NS_CC;
 using namespace std;
@@ -15,6 +16,7 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
+	cocostudio::ArmatureDataManager::destroyInstance();
 }
 
 void AppDelegate::initGLContextAttrs()
@@ -44,6 +46,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #endif
 
 	Size frameSize = glview->getFrameSize();
+
+	auto designSize = Size(480, 320);
     
     vector<string> searchPath;
 
@@ -55,23 +59,24 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // if the frame's height is larger than the height of medium resource size, select large resource.
 	if (frameSize.height > mediumResource.size.height)
 	{
+		auto resourceSize = Size(960, 640);
         searchPath.push_back(largeResource.directory);
 
-        director->setContentScaleFactor(MIN(largeResource.size.height/designResolutionSize.height, largeResource.size.width/designResolutionSize.width));
+		director->setContentScaleFactor(resourceSize.height / designSize.height);
 	}
     // if the frame's height is larger than the height of small resource size, select medium resource.
-    else if (frameSize.height > smallResource.size.height)
+    /*else if (frameSize.height > smallResource.size.height)
     {
         searchPath.push_back(mediumResource.directory);
         
         director->setContentScaleFactor(MIN(mediumResource.size.height/designResolutionSize.height, mediumResource.size.width/designResolutionSize.width));
-    }
+    }*/
     // if the frame's height is smaller than the height of medium resource size, select small resource.
 	else
     {
         searchPath.push_back(smallResource.directory);
 
-        director->setContentScaleFactor(MIN(smallResource.size.height/designResolutionSize.height, smallResource.size.width/designResolutionSize.width));
+        //director->setContentScaleFactor(MIN(smallResource.size.height/designResolutionSize.height, smallResource.size.width/designResolutionSize.width));
     }
     
     // set searching path
